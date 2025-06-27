@@ -14,7 +14,7 @@ This is the same approach as used by StosVPN: <https://github.com/SideStore/Stos
 
 # How to use
 
-You need to run this tool on a Linux computer that is in the same LAN (Layer 2 boundary). This tool will not work if there are stateful NAT layers between the iOS device and the computer, since when sending the packets back, this tool is effectively initiating connections back to the iOS device, which will be blocked by stateful NAT.
+You need to run this tool on a Linux computer that is in the same LAN. This tool will not work if there are stateful NAT layers between the iOS device and the computer, since when sending the packets back, this tool is effectively initiating connections back to the iOS device, which will be blocked by stateful NAT.
 
 You will also need to enable IP forwarding on that Linux machine.
 
