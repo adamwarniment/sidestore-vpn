@@ -1,0 +1,12 @@
+# Dockerfile
+
+FROM rust:latest AS builder
+WORKDIR /usr/src/sidestore-vpn
+COPY . .
+RUN cargo build --release
+
+FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y iproute2 && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /usr/src/sidestore-vpn/target/release/sidestore-vpn /usr/local/bin/sidestore-vpn
+USER root
+ENTRYPOINT ["sidestore-vpn"]
