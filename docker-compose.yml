@@ -1,0 +1,14 @@
+# docker-compose.yml
+
+version: '3.8'
+services:
+  sidestore-vpn:
+    build: .
+    container_name: sidestore-vpn
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    network_mode: host
+    sysctls:
+      - net.ipv4.ip_forward=1
+    restart: unless-stopped
