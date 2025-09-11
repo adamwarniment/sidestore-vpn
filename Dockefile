@@ -1,12 +1,25 @@
 # Dockerfile
 
-FROM rust:latest AS builder
+# Stage 1: Build the application
+FROM --platform=$BUILDPLATFORM rust:1.79-bullseye AS builder
+
 WORKDIR /usr/src/sidestore-vpn
 COPY . .
-RUN cargo build --release
 
+# Build for the target architecture
+RUN cargo build --release --target=$TARGETARCH
+
+# Stage 2: Create the final, slim image
 FROM debian:bookworm-slim
+
+# Install necessary runtime dependencies
 RUN apt-get update && apt-get install -y iproute2 && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /usr/src/sidestore-vpn/target/release/sidestore-vpn /usr/local/bin/sidestore-vpn
+
+# Copy the compiled binary from the builder stage
+COPY --from=builder /usr/src/sidestore-vpn/target/$TARGETARCH/release/sidestore-vpn /usr/local/bin/sidestore-vpn
+
+# Run as root user (required for network manipulation)
 USER root
+
+# Set the entrypoint for the container
 ENTRYPOINT ["sidestore-vpn"]
